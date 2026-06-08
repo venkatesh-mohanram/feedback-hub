@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Feedback Hub</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script type="module" src="./app.mjs"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Product Feedback</p>
+          <h1>Feedback Hub</h1>
+        </div>
+        <dl class="metrics" aria-label="Feedback totals">
+          <div>
+            <dt>Ideas</dt>
+            <dd id="total-metric">0</dd>
+          </div>
+          <div>
+            <dt>Votes</dt>
+            <dd id="votes-metric">0</dd>
+          </div>
+        </dl>
+      </header>
+
+      <main class="workspace">
+        <aside class="submit-pane" aria-labelledby="submit-heading">
+          <h2 id="submit-heading">Submit Idea</h2>
+          <form id="feedback-form" novalidate>
+            <div class="field">
+              <label for="idea-title">Title</label>
+              <input id="idea-title" name="title" autocomplete="off" aria-describedby="idea-title-error" required>
+              <small id="idea-title-error" class="field-error" data-error-for="title"></small>
+            </div>
+
+            <div class="field">
+              <label for="idea-description">Description</label>
+              <textarea id="idea-description" name="description" rows="5" aria-describedby="idea-description-error" required></textarea>
+              <small id="idea-description-error" class="field-error" data-error-for="description"></small>
+            </div>
+
+            <div class="field">
+              <label for="requester-name">Your Name</label>
+              <input id="requester-name" name="requesterName" autocomplete="name" aria-describedby="requester-name-error" required>
+              <small id="requester-name-error" class="field-error" data-error-for="requesterName"></small>
+            </div>
+
+            <div class="field">
+              <label for="idea-category">Category</label>
+              <input id="idea-category" name="category" autocomplete="off" aria-describedby="idea-category-error" required>
+              <small id="idea-category-error" class="field-error" data-error-for="category"></small>
+            </div>
+
+            <button class="primary-action" type="submit">+ Submit</button>
+            <p id="form-message" class="form-message" role="status"></p>
+          </form>
+        </aside>
+
+        <section class="list-pane" aria-labelledby="list-heading">
+          <div class="list-toolbar">
+            <div>
+              <h2 id="list-heading">Ideas</h2>
+              <p id="summary" class="summary">0 of 0 ideas</p>
+            </div>
+            <label class="search-field">
+              <span>Search</span>
+              <input id="search" type="search" autocomplete="off">
+            </label>
+          </div>
+
+          <p id="storage-warning" class="storage-warning" role="status" hidden></p>
+
+          <div id="idea-list" class="idea-list" aria-live="polite"></div>
+
+          <div id="empty-state" class="empty-state" hidden>
+            <h3>No feedback ideas yet</h3>
+            <p>Submit the first idea to start the list.</p>
+          </div>
+
+          <div id="no-results-state" class="empty-state" hidden>
+            <h3>No matching ideas</h3>
+            <p>Try a different search term.</p>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
