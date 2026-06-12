@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Feedback Hub</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div class="brand-lockup" aria-label="Feedback Hub">
+          <div class="brand-mark" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div>
+            <p class="eyebrow">Product feedback</p>
+            <h1>Feedback Hub</h1>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <div class="user-menu" id="userMenu" aria-live="polite"></div>
+          <button class="icon-button" id="seedButton" type="button" title="Restore sample ideas" aria-label="Restore sample ideas">
+            <span aria-hidden="true">↻</span>
+          </button>
+          <button class="primary-button" id="openFormButton" type="button">
+            <span aria-hidden="true">+</span>
+            New idea
+          </button>
+        </div>
+      </header>
+
+      <section class="metrics" aria-label="Feedback summary">
+        <article class="metric">
+          <p>Total ideas</p>
+          <strong id="totalIdeas">0</strong>
+        </article>
+        <article class="metric">
+          <p>Votes cast</p>
+          <strong id="totalVotes">0</strong>
+        </article>
+        <article class="metric">
+          <p>In progress</p>
+          <strong id="activeIdeas">0</strong>
+        </article>
+        <article class="metric">
+          <p>Shipped</p>
+          <strong id="shippedIdeas">0</strong>
+        </article>
+      </section>
+
+      <section class="workspace">
+        <aside class="submission-panel" id="submissionPanel" aria-label="Submit product feedback">
+          <div class="panel-heading">
+            <p class="eyebrow">Submit</p>
+            <h2>Share an idea</h2>
+          </div>
+          <div class="auth-notice" id="authNotice">
+            <div>
+              <strong>Sign in required</strong>
+              <p>Use a Google account before posting feedback.</p>
+            </div>
+            <button class="secondary-button" id="noticeSignInButton" type="button">Sign in</button>
+          </div>
+          <form id="feedbackForm" class="feedback-form">
+            <label>
+              Title
+              <input id="ideaTitle" name="ideaTitle" type="text" maxlength="80" placeholder="Make dashboards exportable" required />
+            </label>
+            <label>
+              Details
+              <textarea id="ideaDetails" name="ideaDetails" rows="5" maxlength="360" placeholder="Describe the problem, who it affects, and what good would look like." required></textarea>
+            </label>
+            <div class="form-grid">
+              <label>
+                Category
+                <select id="ideaCategory" name="ideaCategory">
+                  <option>Analytics</option>
+                  <option>Collaboration</option>
+                  <option>Integrations</option>
+                  <option>Mobile</option>
+                  <option>Security</option>
+                  <option>Workflow</option>
+                </select>
+              </label>
+              <label>
+                Status
+                <select id="ideaStatus" name="ideaStatus">
+                  <option>Under review</option>
+                  <option>Planned</option>
+                  <option>In progress</option>
+                  <option>Shipped</option>
+                </select>
+              </label>
+            </div>
+            <button class="primary-button full-width" type="submit">Submit feedback</button>
+          </form>
+        </aside>
+
+        <section class="feedback-board" aria-label="Feedback list">
+          <div class="board-toolbar">
+            <div class="search-field">
+              <span aria-hidden="true">⌕</span>
+              <input id="searchInput" type="search" placeholder="Search ideas" aria-label="Search ideas" />
+            </div>
+            <div class="segmented-control" role="group" aria-label="Filter by status">
+              <button class="segment is-active" data-status="All" type="button">All</button>
+              <button class="segment" data-status="Under review" type="button">Review</button>
+              <button class="segment" data-status="Planned" type="button">Planned</button>
+              <button class="segment" data-status="In progress" type="button">Progress</button>
+              <button class="segment" data-status="Shipped" type="button">Shipped</button>
+            </div>
+            <label class="sort-control">
+              Sort
+              <select id="sortSelect">
+                <option value="votes">Most votes</option>
+                <option value="newest">Newest</option>
+                <option value="status">Status</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="status-lane" aria-label="Feature status totals">
+            <div>
+              <span class="status-dot review"></span>
+              <p>Under review</p>
+              <strong id="reviewCount">0</strong>
+            </div>
+            <div>
+              <span class="status-dot planned"></span>
+              <p>Planned</p>
+              <strong id="plannedCount">0</strong>
+            </div>
+            <div>
+              <span class="status-dot progress"></span>
+              <p>In progress</p>
+              <strong id="progressCount">0</strong>
+            </div>
+            <div>
+              <span class="status-dot shipped"></span>
+              <p>Shipped</p>
+              <strong id="shippedCount">0</strong>
+            </div>
+          </div>
+
+          <div class="feedback-list" id="feedbackList" aria-live="polite"></div>
+          <p class="empty-state" id="emptyState" hidden>No ideas match your current filters.</p>
+        </section>
+      </section>
+    </main>
+
+    <template id="feedbackCardTemplate">
+      <article class="feedback-card">
+        <button class="vote-button" type="button" title="Vote for idea" aria-label="Vote for idea">
+          <span class="vote-count">0</span>
+          <span>Vote</span>
+        </button>
+        <div class="card-main">
+          <div class="card-header">
+            <div>
+              <p class="card-meta"></p>
+              <h3></h3>
+            </div>
+            <span class="status-pill"></span>
+          </div>
+          <p class="card-details"></p>
+          <div class="card-footer">
+            <span class="category-chip"></span>
+            <span class="requester-chip"></span>
+            <label>
+              Move status
+              <select class="status-select">
+                <option>Under review</option>
+                <option>Planned</option>
+                <option>In progress</option>
+                <option>Shipped</option>
+              </select>
+            </label>
+          </div>
+        </div>
+      </article>
+    </template>
+
+    <div class="modal-backdrop" id="authModal" hidden>
+      <section class="auth-dialog" role="dialog" aria-modal="true" aria-labelledby="authDialogTitle">
+        <div class="dialog-heading">
+          <div>
+            <p class="eyebrow">Google sign-in</p>
+            <h2 id="authDialogTitle">Sign in to post feedback</h2>
+          </div>
+          <button class="icon-button" id="closeAuthButton" type="button" aria-label="Close sign-in dialog">×</button>
+        </div>
+        <div id="googleButtonMount" class="google-button-mount"></div>
+        <div class="demo-sign-in">
+          <p>Prototype mode</p>
+          <label>
+            Google email
+            <input id="demoEmail" type="email" placeholder="you@example.com" autocomplete="email" />
+          </label>
+          <button class="secondary-button full-width" id="demoSignInButton" type="button">Continue with Google</button>
+        </div>
+      </section>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
